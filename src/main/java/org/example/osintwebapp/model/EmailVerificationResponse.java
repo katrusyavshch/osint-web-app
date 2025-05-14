@@ -1,5 +1,7 @@
 package org.example.osintwebapp.model;
 
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,5 +11,5 @@ public class EmailVerificationResponse {
     private String email;
     private String status;
     private int score;
-    private String sources;
+    private List<Map<String, Object>> sources;
 }

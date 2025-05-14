@@ -9,6 +9,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.example.osintwebapp.model.EmailVerificationResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,18 +43,23 @@ public class EmailBreachService {
 
             JsonNode data = root.path("data");
 
+            List<Map<String, Object>> sources = mapper.convertValue(
+                    data.path("sources"),
+                    new com.fasterxml.jackson.core.type.TypeReference<List<Map<String, Object>>>() {}
+            );
+
             EmailVerificationResponse verificationResponse = new EmailVerificationResponse(
                     data.path("email").asText(),
                     data.path("result").asText(),
                     data.path("score").asInt(),
-                    data.path("sources").toString()
+                    sources
             );
 
             return verificationResponse;
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            return new EmailVerificationResponse("", "Error", 0, "[]");
+            return new EmailVerificationResponse("", "Error", 0, List.of());
         }
     }
     
